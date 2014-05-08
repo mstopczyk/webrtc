@@ -1,0 +1,31 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 06-May-2014, 14:09:11
+    Author     : kstawicki
+*/
+
+.webrtc-navbar{
+    background-color: #2F213A;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.btn-info {
+        background-image: linear-gradient(to bottom, #2F213A 0%, #2F213A 100%);
+    background-repeat: repeat-x;
+    border-color: #2F213A;
+}
+
+.btn-info:hover{
+     background-color: #2F213A;
+}
+
+.btn-info:focus{
+     background-color: #2F213A;
+}
