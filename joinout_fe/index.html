@@ -5,8 +5,11 @@
   <title>My HTML File</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="css/app.css">
+  
   <script src="bower_components/angular/angular.js"></script>
+  
   <script src="js/controllers.js"></script>
+  
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
   <script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
   <script>
@@ -74,7 +77,9 @@
 					<button ng-click="readRegisteredUsers()">Refresh Contacts</button>
 				</td>
 				<td colspan="1" rowspan="3">
-					<video id="their-video" autoplay></video>
+					<div id="inCallDiv2">
+						<video style="width: 800px; height: 600px;" id="their-video" autoplay></video>
+					</div>
 				</td>
 			</tr>
 			<tr>

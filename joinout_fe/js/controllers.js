@@ -2,7 +2,7 @@ var joinoutServerHost = "http://ec2-54-203-128-161.us-west-2.compute.amazonaws.c
 var stunTurnServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
 var peerJsServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
 
-var joinoutApp = angular.module('joinoutApp', []);
+var joinoutApp = angular.module('joinoutApp',[]);
 
 // przydatne zmienne
 // $scope.registered_user_id 
@@ -65,6 +65,7 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 			
 		// Receiving a call
 		$scope.peerServer.on('call', function(call){
+			
 		  // Answer the call automatically (instead of prompting user) for demo purposes
 		  call.answer(window.localStream);
 		  $scope.handleCall(call);		
@@ -128,10 +129,12 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 	
 	$scope.hideInCallDiv = function() {		
 		$('#inCallDiv').hide();
+		$('#inCallDiv2').hide();
 	};	
 		
 	$scope.showInCallDiv = function() {		
 		$('#inCallDiv').show();
+		$('#inCallDiv2').show();
 	};	
 		
 	// poll server every 10 sec  (expressed in miliseconds)   DOES NOT WORK 
