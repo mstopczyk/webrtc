@@ -1,4 +1,6 @@
-var applicationHost = "http://localhost:8080";
+var joinoutServerHost = "http://ec2-54-203-128-161.us-west-2.compute.amazonaws.com:8080";
+var stunTurnServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
+var peerJsServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
 
 var joinoutApp = angular.module('joinoutApp', []);
 
@@ -20,7 +22,7 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
             "user_name":$scope.userName,"user_id":generated_string_id
         });
         
-        $http({method: 'POST', url: applicationHost+'/users', data:JSON.stringify(positionInJson)}).
+        $http({method: 'POST', url: joinoutServerHost+'/users', data:JSON.stringify(positionInJson)}).
             success(function(data, status, headers, config) {
                $scope.registered_user_name = data.user_name;
                $scope.registered_user_id = data.user_id;
@@ -38,7 +40,7 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 		};
 		
 	$scope.readRegisteredUsers = function() {
-		$http({method: 'GET', url: applicationHost+'/users'}).
+		$http({method: 'GET', url: joinoutServerHost+'/users'}).
             success(function(data, status, headers, config) {
                $scope.users = data;
             }).
@@ -51,9 +53,19 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 		/////////
 			$scope.registerCreatePeerServer = function() {
 		
-			$scope.peerServer = new Peer($scope.registered_user_id , { key: 'fs74lpm5eqe8w7b9', debug: 3, config: {'iceServers': [
-			{ url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
-				]}});
+		//	$scope.peerServer = new Peer($scope.registered_user_id , { key: 'fs74lpm5eqe8w7b9', debug: 3, config: {'iceServers': [
+		//	{ url: 'stun:stun.l.google.com:19302' } // Pass in optional STUN and TURN server for maximum network compatibility
+		//		]}});
+				
+				
+		    // PeerJS object
+			$scope.peerServer = new Peer($scope.registered_user_id , {host: peerJsServerHost, port: 9000, debug:3, 
+				config: {'iceServers': [
+				 {	url: 'turn:'+stunTurnServerHost+':3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		},
+				 {	url: 'stun:'+stunTurnServerHost+':3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		}
+				]}
+			});
+		
 		
 			$scope.peerServer.on('open', function(){
 			  $('#my-id').text($scope.peerServer.id);

@@ -1,13 +1,11 @@
 0. Install MongoDB
 
 1. Copy file into a directory 
-2. Run in the directory with app.js
+2. Run in the directory with server.js
 npm install restify
 npm install mongodb
 npm install monk
 npm install mongoose
-
-
 npm install express
 
 3. Start app 'node server.js'
@@ -41,7 +39,7 @@ curl http://localhost:8080/users
 
 # CREATE a Single User
 curl -i -X POST  http://localhost:8080/users -d '{ "user_name":"John Rabmo", "user_id":"997" }'
-curl -i -X POST  http://localhost:8080/users -d 'user_name=FULLY_BLOCKED'
+
 
 
 # testing

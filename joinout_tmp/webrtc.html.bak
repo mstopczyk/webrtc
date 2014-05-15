@@ -14,8 +14,8 @@
 		config: {'iceServers': [
 		 {	url: 'turn:<TURN_IP>:3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		},
 		 {	url: 'stun:<TURN_IP>:3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		}
-  ]}
-});
+		]}
+	});
 
 
     peer.on('open', function(){
