@@ -1,6 +1,6 @@
-var joinoutServerHost = "http://ec2-54-203-128-161.us-west-2.compute.amazonaws.com:8080";
-var stunTurnServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
-var peerJsServerHost = "ec2-54-203-128-161.us-west-2.compute.amazonaws.com";
+var joinoutServerHost = "http://ec2-54-188-159-146.us-west-2.compute.amazonaws.com:8080";
+var stunTurnServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
+var peerJsServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
 
 var joinoutApp = angular.module('joinoutApp',[]);
 
