@@ -2,11 +2,15 @@
 <html lang="en" ng-app="joinoutApp">
 <head>
   <meta charset="utf-8">
-  <title>JoinOut 0.1 by IMPAQ</title>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <title>JoinOut 0.1a by IMPAQ</title>
+  <!-- link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/app.css">
   
   <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  
   
   <script src="js/controllers.js"></script>
   
@@ -16,6 +20,9 @@
 	// Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   </script>
+  
+  
+  
 </head>
 <body ng-controller="MainCtrl"   style="background-color:#d3d3d3; font-family:verdana;">
 
@@ -25,7 +32,7 @@
 				<td colspan="2" align="center">
 					<!-- Header -->	
 					<div>
-						<h2>JoinOut 0.1 by IMPAQ</h2>
+						<h2>JoinOut 0.1a by IMPAQ</h2>
 						<i>(in particular by: M2M&amp;CC)</i>
 					</div>
 				</td>
@@ -100,8 +107,6 @@
 		</tbody>
 	</table>
 			
-	
-<br />
 
 </body>
 </html>

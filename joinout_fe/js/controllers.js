@@ -2,7 +2,7 @@ var joinoutServerHost = "http://ec2-54-188-159-146.us-west-2.compute.amazonaws.c
 var stunTurnServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
 var peerJsServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
 
-var joinoutApp = angular.module('joinoutApp',[]);
+var joinoutApp = angular.module('joinoutApp',['ui.bootstrap']);
 
 // przydatne zmienne
 // $scope.registered_user_id 
@@ -39,12 +39,13 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 	};
 		
 	$scope.readRegisteredUsers = function() {
+		
 		$http({method: 'GET', url: joinoutServerHost+'/users'}).
             success(function(data, status, headers, config) {
                $scope.users = data;
             }).
             error(function(data, status, headers, config) {
-                alert("error code 04");
+                alert("error code ERR_CONNECTION_TIMED_OUT");
             });
 	};	
 		
