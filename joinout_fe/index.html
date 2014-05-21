@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>JoinOut 0.1a by IMPAQ</title>
   <!-- link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" -->
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   
   <link rel="stylesheet" href="css/app.css">
   
@@ -20,7 +20,29 @@
 	// Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   </script>
-  
+  <script type="text/ng-template" id="errorDialog.html">
+    <div class="modal-header">
+      <h3 class="modal-title">Sorry, error occurred!</h3>
+    </div>
+    <div class="modal-body">
+      <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="incomingCallDialog.html">
+    <div class="modal-header">
+      <h3 class="modal-title">{{caller}} is calling you&hellip;</h3>
+    </div>
+    <div class="modal-body">
+      <p>Do you want to accept incoming call?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="accept()">Accept</button>
+      <button class="btn btn-warning" ng-click="reject()">Reject</button>
+    </div>
+  </script>
   
   
 </head>
@@ -80,8 +102,6 @@
 						
 					  </ul>  
 					</div>
-					<br />
-					<button ng-click="readRegisteredUsers()">Refresh Contacts</button>
 				</td>
 				<td colspan="1" rowspan="3">
 					<div id="inCallDiv2">

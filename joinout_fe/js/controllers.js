@@ -1,6 +1,6 @@
-var joinoutServerHost = "http://ec2-54-188-159-146.us-west-2.compute.amazonaws.com:8080";
-var stunTurnServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
-var peerJsServerHost = "ec2-54-188-159-146.us-west-2.compute.amazonaws.com";
+var joinoutServerHost = "http://ec2-54-188-109-128.us-west-2.compute.amazonaws.com:8080";
+var stunTurnServerHost = "ec2-54-188-109-128.us-west-2.compute.amazonaws.com";
+var peerJsServerHost = "ec2-54-188-109-128.us-west-2.compute.amazonaws.com";
 
 var joinoutApp = angular.module('joinoutApp',['ui.bootstrap']);
 
@@ -8,7 +8,7 @@ var joinoutApp = angular.module('joinoutApp',['ui.bootstrap']);
 // $scope.registered_user_id 
 // $scope.peerServer
 
-joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
+joinoutApp.controller('MainCtrl', function($scope, $filter, $http, $interval, $modal) {
 	
 	var peerServer;
 
@@ -33,7 +33,7 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 			   
             }).
             error(function(data, status, headers, config) {
-                alert("error code 01");
+                handleError("error code 01");
             });
             
 	};
@@ -42,10 +42,12 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 		
 		$http({method: 'GET', url: joinoutServerHost+'/users'}).
             success(function(data, status, headers, config) {
+              console.log('success');
                $scope.users = data;
             }).
             error(function(data, status, headers, config) {
-                alert("error code ERR_CONNECTION_TIMED_OUT");
+              $interval.cancel($scope.readingRegisteredUsersInterval)
+              handleError("error code ERR_CONNECTION_TIMED_OUT");
             });
 	};	
 		
@@ -65,15 +67,29 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 			
 			
 		// Receiving a call
-		$scope.peerServer.on('call', function(call){
-			
-		  // Answer the call automatically (instead of prompting user) for demo purposes
-		  call.answer(window.localStream);
-		  $scope.handleCall(call);		
-		});
-		
+		$scope.peerServer.on('call', function(call) {
+      
+      var incomingCallDialogInstance = $modal.open({
+        templateUrl: 'incomingCallDialog.html',
+        controller: 'IncomingCallDialogCtrl',
+        resolve: {
+          caller: function () {
+            return 'UNKNOWN';
+          }
+        }
+      });
+      incomingCallDialogInstance.result.then(function (result) {
+        if (result.accepted) {
+          call.answer(window.localStream);
+          $scope.handleCall(call);	
+        } else {
+          console.log('Call rejected');
+        }
+      });
+    });
+    
 		$scope.peerServer.on('error', function(err){
-			alert(err.message);
+			handleError(err.message);
 			$scope.hideInCallDiv();
 		});		
 		
@@ -100,11 +116,11 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 			window.localStream = stream;
 			$('#smileAndHairDiv').show();
 				
-		}, function(){ alert("error code 08"); });
+		}, function(){ handleError("error code 08"); });
    
 	};
 		
-	$scope.handleCall = function(call) {		
+	$scope.handleCall = function(call) {
 	
 		// Hang up on an existing call if present
 		if (window.existingCall) {
@@ -131,19 +147,58 @@ joinoutApp.controller('MainCtrl', function($scope, $filter, $http) {
 	$scope.hideInCallDiv = function() {		
 		$('#inCallDiv').hide();
 		$('#inCallDiv2').hide();
-	};	
+	};
 		
 	$scope.showInCallDiv = function() {		
 		$('#inCallDiv').show();
 		$('#inCallDiv2').show();
 	};	
 		
-	// poll server every 10 sec  (expressed in miliseconds)   DOES NOT WORK 
-	//$interval($scope.readRegisteredUsers(), 10000);
-	$scope.readRegisteredUsers()
-		
+	// poll server every 10 sec  (expressed in miliseconds)
+	$scope.readRegisteredUsers();
+  $scope.readingRegisteredUsersInterval = $interval($scope.readRegisteredUsers, 10000);
+  $scope.$on('$destroy', function() {
+    $interval.cancel($scope.readingRegisteredUsersInterval);
+  });
+  
 	// by default ukrywany niektore elementy
 	$scope.hideInCallDiv();
 	$('#smileAndHairDiv').hide();
-	
+  
+  function handleError(message) {
+    var errorModalInstance = $modal.open({
+      templateUrl: 'errorDialog.html',
+      controller: 'ErrorDialogCtrl',
+      resolve: {
+        message: function () {
+          return message;
+        }
+      }
+    });
+//    errorModalInstance.result.then(function (selectedItem) {
+//        $scope.selected = selectedItem;
+//      }, function () {
+//        $log.info('Modal dismissed at: ' + new Date());
+//      });
+//    };
+  }
 });
+
+
+joinoutApp.controller('ErrorDialogCtrl', function($scope, $modalInstance, message) {
+  $scope.message = message;
+  $scope.ok = function () {
+    $modalInstance.close();
+  }
+});
+
+joinoutApp.controller('IncomingCallDialogCtrl', function($scope, $modalInstance, caller) {
+  $scope.caller = caller;
+  $scope.accept = function () {
+    $modalInstance.close({accepted: true});
+  };
+  $scope.reject = function () {
+    $modalInstance.close({accepted: false});
+  };
+});
+
