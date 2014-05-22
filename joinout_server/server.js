@@ -10,7 +10,8 @@ var Schema = mongoose.Schema;
 var User = new Schema({  
     user_id: { type: String, required: true },  
     user_name: { type: String, unique: true },  
-    user_creation_date: { type: Date, default: Date.now }
+    user_creation_date: { type: Date, default: Date.now },
+    user_last_activity_date: { type: Date, required: true }
 });
 
 var UserModel = mongoose.model('User', User);  
@@ -32,7 +33,6 @@ restify.CORS.ALLOW_HEADERS.push('withcredentials');
 restify.CORS.ALLOW_HEADERS.push('x-requested-with');
 server.use(restify.CORS());
 server.use(restify.fullResponse());
-
 function unknownMethodHandler(req, res) {
   if (req.method.toLowerCase() === 'options') {
       console.log('received an options method request');
@@ -74,7 +74,8 @@ server.post('/users', function (req, res){
 
   product = new UserModel({
     user_id:json.user_id,
-    user_name:json.user_name
+    user_name:json.user_name,
+    user_last_activity_date:new Date()
   });
   product.save(function (err) {
     if (!err) {
@@ -85,6 +86,24 @@ server.post('/users', function (req, res){
   });
   return res.send(product);
 });
+
+// UPDATE a Single User (update its last_activity_date)
+// curl -i -X PUT  http://193.187.64.99:8080/users/08908808883279562
+// other possibility described here: http://mongoosejs.com/docs/2.7.x/docs/updating-documents.html
+server.put('/users/:id', function (req, res){
+        UserModel.findOne({ user_id:req.params.id }, function (err, user){
+          user.user_last_activity_date = new Date() ;
+          user.save(function (err) {
+                if (!err) {
+                  return console.log("updated");
+                } else {
+                  return console.log(err);
+                }
+          });
+        });
+  return res.send("200 OK");
+});
+
 
 server.listen(8080);
 console.log('Starting Restify on port: 8080');

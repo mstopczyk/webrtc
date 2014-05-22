@@ -13,6 +13,7 @@
   
   
   <script src="js/controllers.js"></script>
+  <script src="js/directives.js"></script>
   
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
   <script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
@@ -20,9 +21,9 @@
 	// Compatibility shim
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   </script>
-  <script type="text/ng-template" id="errorDialog.html">
+  <script type="text/ng-template" id="messageDialog.html">
     <div class="modal-header">
-      <h3 class="modal-title">Sorry, error occurred!</h3>
+      <h3 class="modal-title">{{title}}</h3>
     </div>
     <div class="modal-body">
       <p>{{message}}</p>
@@ -48,6 +49,10 @@
 </head>
 <body ng-controller="MainCtrl"   style="background-color:#d3d3d3; font-family:verdana;">
 
+  <div id="loaderDiv" loader>
+    <img src="img/spinner.gif" class="ajax-loader"/>
+  </div>
+  
 	<table border="1" cellpadding="1" cellspacing="1" width="100%">
 		<tbody>
 			<tr>
@@ -114,7 +119,9 @@
 					<div id="inCallDiv">
 					Rozmowa z: <br />
 					<span id="their-id">...</span><br />
-					<button ng-click="finishACall()">Finish Call</button>
+					<button ng-click="finishACall()">Finish Call</button> <br />
+					<button ng-click="muteVideo()">Mute video</button> | <button ng-click="unmuteVideo()">UnMute video</button> <br />
+					<button ng-click="muteAudio()">Mute audio</button> | <button ng-click="unmuteAudio()">UnMute audio</button>
 					</div>
 				</td>
 			</tr>
@@ -125,8 +132,7 @@
 				</td>
 			</tr>
 		</tbody>
-	</table>
-			
-
+  </table>
+  
 </body>
 </html>

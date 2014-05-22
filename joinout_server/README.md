@@ -7,6 +7,7 @@ npm install mongodb
 npm install monk
 npm install mongoose
 npm install express
+npm install safe_datejs
 
 3. Start app 'node server.js'
 
@@ -44,3 +45,20 @@ curl -i -X POST  http://localhost:8080/users -d '{ "user_name":"John Rabmo", "us
 
 # testing
 curl -is -X POST -H "Content-Type: application/json" -d '{ "name":"John", "a":"b" }' http://127.0.0.1:8080/user
+
+
+
+========================================
+
+-------- zawartosc pliku cleanmongo.js   --------------
+var last_activity_deadline = new Date()
+last_activity_deadline.setMinutes(last_activity_deadline.getMinutes()-15)
+var query =  {"user_creation_date":{$lt: last_activity_deadline}}
+db.getCollection("users").remove(query);
+
+
+# dodac do crona czyszczenie mongo (moze byc co minute)
+* * * * * mongo /root/cleanmongo.js
+
+
+
