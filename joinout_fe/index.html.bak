@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" ng-app="joinoutApp">
+<head>
+  <meta charset="utf-8">
+  <title>JoinOut 0.2 by IMPAQ (in particular by: M2M&amp;CC)</title>
+  <!-- link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" -->
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/foundation.min.css">
+  <link rel="stylesheet" href="css/app.css">
+  
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  
+  
+  <script src="js/controllers.js"></script>
+  <script src="js/directives.js"></script>
+  
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.peerjs.com/0.3/peer.js"></script>
+  <script>
+	// Compatibility shim
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  </script>
+  <script type="text/ng-template" id="messageDialog.html">
+    <div class="modal-header">
+      <h3 class="modal-title">{{title}}</h3>
+    </div>
+    <div class="modal-body">
+      <p>{{message}}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="ok()">OK</button>
+    </div>
+  </script>
+  <script type="text/ng-template" id="incomingCallDialog.html">
+    <div class="modal-header">
+      <h3 class="modal-title">{{caller}} is calling you&hellip;</h3>
+    </div>
+    <div class="modal-body">
+      <p>Do you want to accept incoming call?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="accept()">Accept</button>
+      <button class="btn btn-warning" ng-click="reject()">Reject</button>
+    </div>
+  </script>
+  
+  
+</head>
+<body ng-controller="MainCtrl">
+
+  <div id="loaderDiv" loader>
+    <img src="img/spinner.gif" class="ajax-loader"/>
+  </div>
+  
+	<table border="1" cellpadding="1" cellspacing="1" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2" align="center">
+					<!-- Header -->	
+					<div>
+						<h2>JoinOut 0.2 by IMPAQ</h2>
+						<i>(in particular by: M2M&amp;CC)</i>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<!-- Formularz rejestracyjny -->
+					<div ng-show="!registered_user_name"> 
+						<form ng-submit="registerNewUser()">
+							Aby moc korzystac z JoinOuta podaj swoje imie i nazwisko lub nick: <input type="text" ng-model="userName" required>
+							<button class="btn btn-info info" type="submit" >Zarejestruj mnie</button> <br />
+							Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.
+						</form>
+					</div>
+
+					<!-- Informacja o zarejestrowanym uzytkowniku -->
+					<div ng-show="registered_user_name">
+						Witaj <b>{{registered_user_name}}</b> Milego odbioru...
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td width="300px" align="center">
+					<!-- Informacja o liscie kontaktow -->
+					<h3>Lista kontaktów</h3> <br />
+					
+					<div ng-show="registered_user_name"> 
+						<i>Kliknij na link aby nawiazac polaczenie</i>
+					</div>
+					<div ng-show="!registered_user_name"> 
+						<font color="red"><i>!! Aby móc do kogoś zadzwonić najpierw się zarejestruj !!</i></font>
+					</div>
+					
+					<br />
+					<div style="width: 300px; height: 300px; overflow-y: scroll;">
+					  <ul>
+						
+						<span ng-if="registered_user_name">
+							<li ng-repeat="user in users | filter:withoutMeFilter">	<a href="#" ng-click="makeACall(user)">{{user.user_name}}</a> </li>
+						</span>
+						<span ng-if="!registered_user_name">
+							<li ng-repeat="user in users | filter:withoutMeFilter">	{{user.user_name}} </li>
+						</span>
+						
+					  </ul>  
+					</div>
+				</td>
+				<td colspan="1" rowspan="3">
+					<div id="inCallDiv2">
+						<video style="width: 800px; height: 600px;" id="their-video" autoplay></video>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="inCallDiv">
+					Rozmowa z: <br />
+					<span id="their-id">...</span><br />
+					<button ng-click="finishACall()">Finish Call</button> <br />
+					<button ng-click="muteUnmuteAudio()">{{muteUnmuteAudioLabel}}</button> | 
+					<button ng-click="muteUnmuteVideo()">{{muteUnmuteVideoLabel}}</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="smileAndHairDiv"><small><i>(pamietaj o ladnym usmiechu i fryzurze :) )</i></small></div>
+					<video style="width: 300px; height: 300px;" id="my-video" muted="true" autoplay></video>
+				</td>
+			</tr>
+		</tbody>
+  </table>
+  
+</body>
+</html>
