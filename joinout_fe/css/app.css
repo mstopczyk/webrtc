@@ -17,3 +17,107 @@
    margin-top: -32px; /* -1 * image height / 2 */
    display: block;
 }
+
+.logo {
+   position: absolute;
+   display: block;
+   margin-left: 50px; 
+}
+
+.joinout_registration {
+	height: 80px;
+	background: #40304a; 
+	display: block;
+}
+
+
+.joinout_registered{
+	position: absolute;
+	margin-top: 5px; 
+	margin-left: 220px; 
+	display: block;
+	color: #A5A5A5; 
+}
+
+.registered_user_name {
+	color: #000000; 
+	font-weight:bold;
+}
+
+.joinout_contact_list{
+	
+	position: absolute;
+	margin-top: 75px; 
+	margin-left: 60px; 
+	
+	height: 300px;
+	width: 200px;
+	overflow: auto;
+	display: block;
+}
+
+.black_button{
+	background: #000000; 
+	color: #FFFFFF; 
+}
+
+.register_input{
+	background: #FFFFFF; 
+	color: #000000; 
+	width: 200px;
+	height: 35px;
+}
+
+
+.registration_form{
+	position: absolute;
+	left: 70%;
+	margin-top: 20px; 
+	display: block;
+}
+
+
+.control_buttons{
+	position: absolute;
+	margin-top: 400px; 
+	margin-left: 60px; 
+	
+	height: 300px;
+	overflow: auto;
+	display: block;
+}
+
+.connect_button{
+	width: 200px;
+}
+
+.mute_button{
+	width: 97px;
+}
+
+.my_video_div{
+	position: absolute;
+	margin-top: 480px; 
+	margin-left: 60px; 
+	height: 200px;
+	width: 200px;
+	display: block;
+}
+
+.their_video_div{
+
+	position: absolute;
+	margin-top: 75px; 
+	margin-left: 300px; 
+	height: 600px;
+	width: 800px;
+	display: block;
+}
+
+
+.in_call_info{
+	position: absolute;
+	margin-top: 40px; 
+	margin-left: 300px; 
+	display: block;
+}

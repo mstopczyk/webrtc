@@ -10,12 +10,16 @@ var joinoutApp = angular.module('joinoutApp',['ui.bootstrap']);
 
 joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $interval, $modal, player) {
   
-	var peerServer;
+  var peerServer;
   var phoneRingingPlayer = player;
   phoneRingingPlayer.media.url = 'audio/phone-ringing.mp3';
   phoneRingingPlayer.loop = true;
+  $scope.info_message = "To make a call you have to register first !!!";
+  
+  $scope.muteUnmuteAudioLabel = "Audio off";
+  $scope.muteUnmuteVideoLabel = "Video off";
 
-	$scope.registerNewUser = function() {
+  $scope.registerNewUser = function() {
     $rootScope.$broadcast('loader_show');
 		
 		var generated_double_id = Math.random();
@@ -34,7 +38,10 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 			   $scope.createPeerServerConnection();
 			   
 			   $scope.enableUserMedia();
-              $rootScope.$broadcast('loader_hide');
+			   $rootScope.$broadcast('loader_hide');
+			   $scope.info_message="To make a call click on link";
+              
+              
             }).
             error(function(data, status, headers, config) {
               $rootScope.$broadcast('loader_hide');
@@ -75,9 +82,6 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 			 {	url: 'stun:'+stunTurnServerHost+':3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		}
 			]}
 		});
-		
-		
-		
 		
 		$scope.peerServer.on('open', function(){
 		  $('#my-id').text($scope.peerServer.id);
@@ -132,23 +136,29 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 		
 	$scope.finishACall = function() {
 		window.existingCall.close();
+		$scope.info_message="To make a call click on link";
 		$scope.hideInCallDiv();	
 	};		
+
+	$scope.muteUnmuteAudio = function() {
+		if(window.existingCall.localStream.getAudioTracks()[0].enabled){
+			window.existingCall.localStream.getAudioTracks()[0].enabled = false;
+			$scope.muteUnmuteAudioLabel = "Audio on";
+		} else {
+			window.existingCall.localStream.getAudioTracks()[0].enabled = true;
+			$scope.muteUnmuteAudioLabel = "Audio off";
+		}
+	};
+	
+	$scope.muteUnmuteVideo = function() {
+		if(window.existingCall.localStream.getVideoTracks()[0].enabled){
+			window.existingCall.localStream.getVideoTracks()[0].enabled = true;
+			$scope.muteUnmuteVideoLabel = "Video on";
+		} else {
+			window.existingCall.localStream.getVideoTracks()[0].enabled = true;
+			$scope.muteUnmuteVideoLabel = "Video off";
+		}
 		
-	$scope.muteVideo = function() {
-		window.existingCall.localStream.getVideoTracks()[0].enabled = false;
-	};	
-	
-	$scope.unmuteVideo = function() {
-		window.existingCall.localStream.getVideoTracks()[0].enabled = true;
-	};		
-	
-	$scope.muteAudio = function() {
-		window.existingCall.localStream.getAudioTracks()[0].enabled = false;
-	};	
-	
-	$scope.unmuteAudio = function() {
-		window.existingCall.localStream.getAudioTracks()[0].enabled = true;
 	};
 		
 	$scope.enableUserMedia = function() {
@@ -180,7 +190,9 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 		// UI stuff
 		$scope.showInCallDiv();
 		window.existingCall = call;
-		$('#their-id').text(call.peer);
+		
+		 $scope.info_message = "Currently in call with: "+call.peer;
+		//$('#their-id').text(call.peer);
       
 		call.on('close', $scope.hideInCallDiv);
 //    call.on('close', function () {
@@ -217,6 +229,7 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 	$('#smileAndHairDiv').hide();
   
   function handleError(message) {
+	$scope.info_message="To make a call click on link";
     handleMessage(message, 'Sorry, error occurred!');
   }
   

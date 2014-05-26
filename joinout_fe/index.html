@@ -2,10 +2,11 @@
 <html lang="en" ng-app="joinoutApp">
 <head>
   <meta charset="utf-8">
-  <title>JoinOut 0.1a by IMPAQ</title>
+  <title>JoinOut 0.3 by IMPAQ (in particular by: M2M&amp;CC)</title>
   <!-- link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" -->
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
   <link rel="stylesheet" href="css/app.css">
   
   <script src="bower_components/angular/angular.js"></script>
@@ -45,94 +46,72 @@
     </div>
   </script>
   
-  
 </head>
-<body ng-controller="MainCtrl"   style="background-color:#d3d3d3; font-family:verdana;">
-
+<body ng-controller="MainCtrl">
+	
+  <div id="joinout_logo">
+	<img src="img/joinout_logo.png" class="logo"/>
+  </div>	
+  
   <div id="loaderDiv" loader>
     <img src="img/spinner.gif" class="ajax-loader"/>
   </div>
   
-	<table border="1" cellpadding="1" cellspacing="1" width="100%">
-		<tbody>
-			<tr>
-				<td colspan="2" align="center">
-					<!-- Header -->	
-					<div>
-						<h2>JoinOut 0.1a by IMPAQ</h2>
-						<i>(in particular by: M2M&amp;CC)</i>
-					</div>
-				</td>
-			</tr>
-			
-			<tr>
-				<td colspan="2">
-					<!-- Formularz rejestracyjny -->
-					<div ng-show="!registered_user_name"> 
-						<form ng-submit="registerNewUser()">
-							Aby moc korzystac z JoinOuta podaj swoje imie i nazwisko lub nick: <input type="text" ng-model="userName" required>
-							<button class="btn btn-info info" type="submit" >Zarejestruj mnie</button> <br />
-							Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.
-						</form>
-					</div>
+  <!-- Formularz rejestracyjny -->
+	<div id="joinout_registration" class="joinout_registration">
+		<div ng-show="!registered_user_name" class="registration_form"> 
+			<form ng-submit="registerNewUser()">
+				<input type="text" ng-model="userName" required class="register_input">
+				<button class="btn btn-info info register_button" type="submit" >Register</button>
+			</form>
+		</div>
+	</div>
+  
+  
+	<!-- Informacja o zarejestrowanym uzytkowniku -->
+  	<div id="joinout_registered" class="joinout_registered">
+		<div ng-show="registered_user_name">
+			Hello,  <span class="registered_user_name">{{registered_user_name}}</span>
+		</div>
+	</div>
+	
+	
+	<!-- Informacja o liscie kontaktow -->
+	<div id="joinout_contact_list" class="joinout_contact_list">
+		<legend>Contact list</legend>
+		<ul>
+			<span ng-if="registered_user_name"><li ng-repeat="user in users | filter:withoutMeFilter">	<a href="#" ng-click="makeACall(user)">{{user.user_name}}</a> </li>	</span>
+			<span ng-if="!registered_user_name"><li ng-repeat="user in users | filter:withoutMeFilter">	{{user.user_name}} </li></span>
+		</ul>
+	</div>
 
-					<!-- Informacja o zarejestrowanym uzytkowniku -->
-					<div ng-show="registered_user_name">
-						Witaj <b>{{registered_user_name}}</b> Milego odbioru...
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="300px" align="center">
-					<!-- Informacja o liscie kontaktow -->
-					<h3>Lista kontaktów</h3> <br />
-					
-					<div ng-show="registered_user_name"> 
-						<i>Kliknij na link aby nawiazac polaczenie</i>
-					</div>
-					<div ng-show="!registered_user_name"> 
-						<font color="red"><i>!! Aby móc do kogoś zadzwonić najpierw się zarejestruj !!</i></font>
-					</div>
-					
-					<br />
-					<div style="width: 300px; height: 300px; overflow-y: scroll;">
-					  <ul>
-						
-						<span ng-if="registered_user_name">
-							<li ng-repeat="user in users | filter:withoutMeFilter">	<a href="#" ng-click="makeACall(user)">{{user.user_name}}</a> </li>
-						</span>
-						<span ng-if="!registered_user_name">
-							<li ng-repeat="user in users | filter:withoutMeFilter">	{{user.user_name}} </li>
-						</span>
-						
-					  </ul>  
-					</div>
-				</td>
-				<td colspan="1" rowspan="3">
-					<div id="inCallDiv2">
-						<video style="width: 800px; height: 600px;" id="their-video" autoplay></video>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div id="inCallDiv">
-					Rozmowa z: <br />
-					<span id="their-id">...</span><br />
-					<button ng-click="finishACall()">Finish Call</button> <br />
-					<button ng-click="muteVideo()">Mute video</button> | <button ng-click="unmuteVideo()">UnMute video</button> <br />
-					<button ng-click="muteAudio()">Mute audio</button> | <button ng-click="unmuteAudio()">UnMute audio</button>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div id="smileAndHairDiv"><small><i>(pamietaj o ladnym usmiechu i fryzurze :) )</i></small></div>
-					<video style="width: 300px; height: 300px;" id="my-video" muted="true" autoplay></video>
-				</td>
-			</tr>
-		</tbody>
-  </table>
+
+	<!-- control buttons -->
+	<div id="control_buttons" class="control_buttons" >
+		<div id="inCallDiv">
+			<button class="btn btn-info info black_button connect_button" ng-click="finishACall()">Finish Call</button> <br /> <br />
+			<button class="btn btn-info info mute_button" ng-click="muteUnmuteAudio()">{{muteUnmuteAudioLabel}}</button>
+			<button class="btn btn-info info mute_button" ng-click="muteUnmuteVideo()">{{muteUnmuteVideoLabel}}</button>
+		</div>
+	</div>
+	
+	
+	<div id="in_call_info" class="in_call_info">
+		{{info_message}}
+		<!-- Rozmowa z: <span id="their-id">...</span>   -->
+	</div>
+
+
+	<!-- my video div -->
+	<div id="my_video_div" class="my_video_div">
+		<video id="my-video" style="width: 200px; height: 200px;" muted="true" autoplay></video>
+	</div>
+	
+	<!-- their video div -->
+	<div id="their_video_div" class="their_video_div">
+		<video style="width: 800px; height: 600px;" id="their-video" autoplay></video>
+	</div>
+  
   
 </body>
 </html>
