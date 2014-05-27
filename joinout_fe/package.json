@@ -1,0 +1,11 @@
+{
+  "name"         : "test01",
+  "version"      : "0.0.0",
+  "description"  : "Joinout",
+  "main"         : "server.js",
+  "author"       : "MS",
+  "dependencies" : {
+    "express"    : "~3.4.4",
+    "mongoose"   : "~3.6.2"
+  }
+}
