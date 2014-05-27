@@ -11,6 +11,9 @@ app.configure(function() {
 	app.use(express.methodOverride()); 						// simulate DELETE and PUT
 });
 
+console.log(app.enabled('trust proxy'));
+app.enable('trust proxy'); 
+console.log(app.enabled('trust proxy'));
 // routes ======================================================================
 require('./app/routes.js')(app);
 

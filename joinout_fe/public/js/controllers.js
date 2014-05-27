@@ -1,6 +1,6 @@
-var joinoutServerHost = "http://193.187.64.99:8080";
-var stunTurnServerHost = "193.187.64.99";
-var peerJsServerHost = "193.187.64.99";
+var joinoutServerHost = "http://54.245.236.20/api";
+var stunTurnServerHost = "54.245.236.20";
+var peerJsServerHost = "54.245.236.20";
 
 var joinoutApp = angular.module('joinoutApp',['ui.bootstrap']);
 
@@ -76,7 +76,7 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 	$scope.createPeerServerConnection = function() {
 				
 		// PeerJS object
-		$scope.peerServer = new Peer($scope.registered_user_id , {host: peerJsServerHost, port: 9000, debug:3, 
+		$scope.peerServer = new Peer($scope.registered_user_id , {host: peerJsServerHost, port:80, path:'peerjs', debug:3, 
 			config: {'iceServers': [
 			 {	url: 'turn:'+stunTurnServerHost+':3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		},
 			 {	url: 'stun:'+stunTurnServerHost+':3478',		credential: 'youhavetoberealistic',		username: 'ninefingers'		}
@@ -151,7 +151,10 @@ joinoutApp.controller('MainCtrl', function($rootScope, $scope, $filter, $http, $
 	};
 	
 	$scope.muteUnmuteVideo = function() {
-		if(window.existingCall.localStream.getVideoTracks()[0].enabled){
+		
+                alert(window.existingCall.localStream.getVideoTracks()[0].enabled);
+
+                if(window.existingCall.localStream.getVideoTracks()[0].enabled){
 			window.existingCall.localStream.getVideoTracks()[0].enabled = true;
 			$scope.muteUnmuteVideoLabel = "Video on";
 		} else {
